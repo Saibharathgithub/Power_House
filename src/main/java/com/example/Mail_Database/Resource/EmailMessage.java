@@ -8,12 +8,14 @@ public class EmailMessage {
 	private String recipient;
     private String msgBody;
     private String subject;
+    private String attachment;
 
 	
-	    public EmailMessage(String recipient, String msgBody, String subject) {
+	    public EmailMessage(String recipient, String msgBody, String subject,String attachement) {
 		this.recipient = recipient;
 		this.msgBody = msgBody;
 		this.subject = subject;
+		this.attachment=attachement;
 	}
 		public String getRecipient() {
 		return recipient;
@@ -32,6 +34,12 @@ public class EmailMessage {
 	}
 	public void setSubject(String subject) {
 		this.subject = subject;
+	}
+	public String getAttachment() {
+		return attachment;
+	}
+	public void setAttachment(String attachment) {
+		this.attachment = attachment;
 	}
 		
 }

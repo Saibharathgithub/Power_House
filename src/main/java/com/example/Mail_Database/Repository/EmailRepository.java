@@ -13,7 +13,6 @@ public class EmailRepository {
 	JdbcTemplate jdbcTemplate;
 	public List<String> getEmails() {
 		List<String> emails = jdbcTemplate.queryForList("SELECT email_id FROM powerhouse", String.class);
-		System.out.println(emails);
 		return emails;
 	}
 
