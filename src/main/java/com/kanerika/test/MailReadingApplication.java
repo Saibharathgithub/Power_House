@@ -10,6 +10,4 @@ public class MailReadingApplication {
 		SpringApplication.run(MailReadingApplication.class, args);
 	}
 
-
-
 }

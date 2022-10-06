@@ -1,4 +1,5 @@
 package com.kanerika.test.service.impl;
+
 import java.util.Properties;
 
 import javax.mail.Flags;
@@ -20,17 +21,18 @@ import com.kanerika.test.repository.EmailRepository;
 import com.kanerika.test.service.EmailService;
 
 @Service
-public class ReadGmilInboxServiceimpl implements EmailService{
+public class ReadGmilInboxServiceimpl implements EmailService {
 
 	@Autowired
 	private EmailRepository emailRepository;
+
 	public void check(String host, String storeType, String user, String password) {
-		String replySubject;
-		String mail1;
-		String messageContent ="";
-		
+	String	 replySubject = null;
+		String mail1=null;
+		String messageContent = null;
+
 		try {
-			
+
 			// create properties
 			Properties properties = new Properties();
 
@@ -61,9 +63,9 @@ public class ReadGmilInboxServiceimpl implements EmailService{
 				System.out.println("---------------------------------");
 				System.out.println("Email Number " + (i + 1));
 
-				replySubject = message.getSubject();
-				System.out.println("ReplySubject: " + replySubject);
+       		replySubject = message.getSubject();
 				
+				System.out.println("ReplySubject: " + replySubject);
 
 				ReplyFrom = message.getFrom()[0].toString();
 				// System.out.println("ReplyFrom: " + ReplyFrom);
@@ -72,19 +74,18 @@ public class ReadGmilInboxServiceimpl implements EmailService{
 
 				String mail = replymail[1];
 				String[] replymail1 = mail.split(">");
-				 mail1 = replymail1[0];
+				mail1 = replymail1[0];
 				System.out.println(" reply from :" + mail1);
-				
+
 				try {
-				
-				emailRepository.updateReplySubject(mail1,replySubject);
-				}catch (Exception e) {
+
+					emailRepository.updateReplySubject(mail1, replySubject);
+				} catch (Exception e) {
 					e.printStackTrace();
 				}
-				
-				
+
 				String contentType = message.getContentType();
-				//String messageContent = "";
+				// String messageContent = "";
 
 				if (contentType.contains("multipart")) {
 					Multipart multiPart = (Multipart) message.getContent();
@@ -97,11 +98,13 @@ public class ReadGmilInboxServiceimpl implements EmailService{
 					Object content = message.getContent();
 					if (content != null) {
 						messageContent = content.toString();
-						//messageContent = messageContent.replaceAll("\\<.*?\\>", " ");
+
 					}
 				}
 				System.out.println(" Message body: " + messageContent.replaceAll("\\<.*?\\>", " "));
-				emailRepository.updateReplyBody(mail1, messageContent.replaceAll("\\<.*?\\>", ""));
+				emailRepository.updateReplyBody(mail1, messageContent.replaceAll("\\<.*?\\>", " "));
+				emailRepository.updateMailCount(mail1);
+				emailRepository.updateReplyDate(mail1);
 
 			}
 
@@ -118,8 +121,4 @@ public class ReadGmilInboxServiceimpl implements EmailService{
 
 	}
 
-
-
-
-}           
-
+}
