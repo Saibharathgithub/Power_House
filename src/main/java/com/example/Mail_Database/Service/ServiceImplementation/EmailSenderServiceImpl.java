@@ -35,9 +35,11 @@ public class EmailSenderServiceImpl implements EmailSenderService {
 	private String sender;
 	List<String> sendingMails = new LinkedList<>();
 
+	@Override
+	
 	public String sendSimpleMail() {
-		SimpleMailMessage mailMessage = new SimpleMailMessage();
 		List<String> emails = emailRepository.getEmails();
+		SimpleMailMessage mailMessage = new SimpleMailMessage();
 
 		// List<String> emailSubjects = emailRepository.getMailSubect();
 //		 List<String> emailBody = emailRepository.getMailBody();
@@ -72,7 +74,7 @@ public class EmailSenderServiceImpl implements EmailSenderService {
 //		for (String iKey : searchMap.keySet()) {
 //			System.out.println(iKey + ": " + searchMap.get(iKey).toString());
 //		}
-
+ // MimeMessage mailMessage = new MimeMessage();
 		for (int b = 0; b < diffrentDomains.size(); b++) {
 			LinkedList<String> finalMail = searchMap.get(diffrentDomains.get(b));
 			String mailSubject = null;
@@ -120,5 +122,5 @@ public class EmailSenderServiceImpl implements EmailSenderService {
 		return detailsList;
 
 	}
-
 }
+

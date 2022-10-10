@@ -8,7 +8,6 @@ public class MailDatabaseApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(MailDatabaseApplication.class, args);
-		
 
 	}
 

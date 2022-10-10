@@ -44,7 +44,7 @@ public class EmailRepository {
 			MapSqlParameterSource params = new MapSqlParameterSource();
 			params.addValue("emailId", email);
 
-	          mailSubject = template.queryForObject(SQL_SELECT_SENT_MAIL_SUBJECT, params, String.class);
+			mailSubject = template.queryForObject(SQL_SELECT_SENT_MAIL_SUBJECT, params, String.class);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -52,7 +52,7 @@ public class EmailRepository {
 		} finally {
 			jdbcTemplate.getDataSource().getConnection().close();
 		}
-		
+
 		return mailSubject;
 
 	}
@@ -65,7 +65,7 @@ public class EmailRepository {
 //
 //		return mailBody;
 //	}
-	
+
 	// get Email Body
 	private static final String SQL_SELECT_SENT_MAIL_BODY = "select mail_body from  powerhouse WHERE email_id = :emailId";
 
@@ -77,7 +77,7 @@ public class EmailRepository {
 			MapSqlParameterSource params = new MapSqlParameterSource();
 			params.addValue("emailId", email);
 
-			 mailBody = template.queryForObject(SQL_SELECT_SENT_MAIL_BODY, params, String.class);
+			mailBody = template.queryForObject(SQL_SELECT_SENT_MAIL_BODY, params, String.class);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -85,7 +85,7 @@ public class EmailRepository {
 		} finally {
 			jdbcTemplate.getDataSource().getConnection().close();
 		}
-		
+
 		return mailBody;
 
 	}
