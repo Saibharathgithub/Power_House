@@ -1,8 +1,8 @@
-package com.example.Mail_Database.Service;
+package com.kanerika.powerhouse.Service;
 
 import java.util.List;
 
-import com.example.Mail_Database.Resource.MaildetailsPojo;
+import com.kanerika.powerhouse.Resource.MaildetailsPojo;
 
 public interface EmailSenderService {
 
@@ -12,5 +12,5 @@ public interface EmailSenderService {
 
 	// String SearchMailBody();
 
-//	 String sendMailwithAttachment();
+
 }

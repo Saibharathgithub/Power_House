@@ -1,25 +1,16 @@
-package com.example.Mail_Database.Resource;
+package com.kanerika.powerhouse.Resource;
 
 import lombok.Data;
 
 @Data
 public class EmailMessage {
 	private String recipient;
-<<<<<<< HEAD
 	private String msgBody;
 	private String subject;
-=======
-    private String msgBody;
-    private String subject;
     private String attachment;
->>>>>>> branch 'mailsending' of https://github.com/Saibharathgithub/Power_House.git
 
-<<<<<<< HEAD
-	public EmailMessage(String recipient, String msgBody, String subject) {
-=======
 	
 	    public EmailMessage(String recipient, String msgBody, String subject,String attachement) {
->>>>>>> branch 'mailsending' of https://github.com/Saibharathgithub/Power_House.git
 		this.recipient = recipient;
 		this.msgBody = msgBody;
 		this.subject = subject;
@@ -49,9 +40,7 @@ public class EmailMessage {
 	public void setSubject(String subject) {
 		this.subject = subject;
 	}
-<<<<<<< HEAD
 
-=======
 	public String getAttachment() {
 		return attachment;
 	}
@@ -59,5 +48,4 @@ public class EmailMessage {
 		this.attachment = attachment;
 	}
 		
->>>>>>> branch 'mailsending' of https://github.com/Saibharathgithub/Power_House.git
 }

@@ -1,4 +1,4 @@
-package com.example.Mail_Database.Service.ServiceImplementation;
+package com.kanerika.powerhouse.Service.ServiceImplementation;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -11,10 +11,10 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
-import com.example.Mail_Database.Repository.EmailRepository;
-import com.example.Mail_Database.Repository.MaildetailsRepository;
-import com.example.Mail_Database.Resource.MaildetailsPojo;
-import com.example.Mail_Database.Service.EmailSenderService;
+import com.kanerika.powerhouse.Repository.EmailRepository;
+import com.kanerika.powerhouse.Repository.MaildetailsRepository;
+import com.kanerika.powerhouse.Resource.MaildetailsPojo;
+import com.kanerika.powerhouse.Service.EmailSenderService;
 
 @Service
 public class EmailSenderServiceImpl implements EmailSenderService {
@@ -36,7 +36,7 @@ public class EmailSenderServiceImpl implements EmailSenderService {
 	List<String> sendingMails = new LinkedList<>();
 
 	@Override
-	
+
 	public String sendSimpleMail() {
 		List<String> emails = emailRepository.getEmails();
 		SimpleMailMessage mailMessage = new SimpleMailMessage();
@@ -74,13 +74,14 @@ public class EmailSenderServiceImpl implements EmailSenderService {
 //		for (String iKey : searchMap.keySet()) {
 //			System.out.println(iKey + ": " + searchMap.get(iKey).toString());
 //		}
- // MimeMessage mailMessage = new MimeMessage();
+		// MimeMessage mailMessage = new MimeMessage();
 		for (int b = 0; b < diffrentDomains.size(); b++) {
 			LinkedList<String> finalMail = searchMap.get(diffrentDomains.get(b));
 			String mailSubject = null;
 			String mailBody = null;
-
+			int count = 0; // count for checking how many mails sending for domain
 			for (int c = 0; c < finalMail.size(); c++) {
+
 				mailMessage.setFrom(sender);
 				mailMessage.setTo(finalMail.get(c));
 				try {
@@ -97,20 +98,24 @@ public class EmailSenderServiceImpl implements EmailSenderService {
 					return "error in mail ";
 				}
 				try {
-					javaMailSender.send(mailMessage);
+					 javaMailSender.send(mailMessage);
 					System.out.println("sent to : " + finalMail.get(c));
+					// System.out.println("mail subject : " + mailSubject);
+					// System.out.println("mail body : " + mailBody);
 					sendingMails.add(finalMail.get(c));
 					emailRepository.updateMailCount(finalMail.get(c));
+					emailRepository.updateSendMailDate(finalMail.get(c));
+					count = count + 1;
 				} catch (Exception e) {
 					return "Error while Sending Mail";
 				}
-				if (c == 4) {
+				if (count == 5) {
 					break;
 				}
 			}
 		}
 
-		return sendingMails.toString();
+		return "send to: " +"\" " + sendingMails.toString()+" \"";
 
 	}
 
@@ -123,4 +128,3 @@ public class EmailSenderServiceImpl implements EmailSenderService {
 
 	}
 }
-

@@ -1,4 +1,4 @@
-package com.example.Mail_Database.Resource;
+package com.kanerika.powerhouse.Resource;
 
 import java.util.Calendar;
 
@@ -16,17 +16,17 @@ public class MaildetailsPojo {
 	@Id
 	private String email_id;
 	@Column
-	private int mails_count;
+	private int send_mails_count;
 	@Column
 	private String created_by;
 	@Column
-	private Calendar created_date;
+	private Calendar send_mail_date;
 
 	@Override
 	public String toString() {
-		return "MaildetailsPojo [name=" + name + ", email_id=" + email_id + ", mails_count=" + mails_count
-				+ ", created_by=" + created_by + ", created_date=" + created_date + ", updated_by=" + updated_by
-				+ ", reply_subject=" + reply_subject + ", updated_date=" + updated_date + ", mail_subject="
+		return "MaildetailsPojo [name=" + name + ", email_id=" + email_id + ", send_mails_count=" + send_mails_count
+				+ ", created_by=" + created_by + ", send_mail_date=" + send_mail_date + ", updated_by=" + updated_by
+				+ ", reply_subject=" + reply_subject + ", replied_date=" + replied_date + ", mail_subject="
 				+ mail_subject + ", mail_body=" + mail_body + "]";
 	}
 
@@ -45,7 +45,7 @@ public class MaildetailsPojo {
 	}
 
 	@Column
-	private Calendar updated_date;
+	private Calendar replied_date;
 
 	public String getName() {
 		return name;
@@ -56,12 +56,12 @@ public class MaildetailsPojo {
 		super();
 		this.name = name;
 		this.email_id = email_id;
-		this.mails_count = mails_count;
+		this.send_mails_count = mails_count;
 		this.created_by = created_by;
-		this.created_date = created_date;
+		this.send_mail_date = created_date;
 		this.updated_by = updated_by;
 		this.reply_subject = reply_subject;
-		this.updated_date = updated_date;
+		this.replied_date = updated_date;
 		this.mail_subject = mail_subject;
 		this.mail_body = mail_body;
 	}
@@ -79,11 +79,11 @@ public class MaildetailsPojo {
 	}
 
 	public int getMails_count() {
-		return mails_count;
+		return send_mails_count;
 	}
 
 	public void setMails_count(int mails_count) {
-		this.mails_count = mails_count;
+		this.send_mails_count = mails_count;
 	}
 
 	public String getCreated_by() {
@@ -95,11 +95,11 @@ public class MaildetailsPojo {
 	}
 
 	public Calendar getCreated_date() {
-		return created_date;
+		return send_mail_date;
 	}
 
 	public void setCreated_date(Calendar created_date) {
-		this.created_date = created_date;
+		this.send_mail_date = created_date;
 	}
 
 	public String getUpdated_by() {
@@ -111,7 +111,7 @@ public class MaildetailsPojo {
 	}
 
 	public Calendar getUpdated_date() {
-		return updated_date;
+		return replied_date;
 	}
 
 	public MaildetailsPojo() {
@@ -120,7 +120,7 @@ public class MaildetailsPojo {
 	}
 
 	public void setUpdated_date(Calendar updated_date) {
-		this.updated_date = updated_date;
+		this.replied_date = updated_date;
 	}
 
 	public String getMail_subject() {
