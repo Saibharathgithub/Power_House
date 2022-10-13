@@ -1,18 +1,30 @@
 package com.kanerika.powerhouse.Service.ServiceImplementation;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
+
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.Multipart;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
-import com.kanerika.powerhouse.Repository.EmailRepository;
 import com.kanerika.powerhouse.Repository.MaildetailsRepository;
+import com.kanerika.powerhouse.Repository.SendEmailRepository;
 import com.kanerika.powerhouse.Resource.MaildetailsPojo;
 import com.kanerika.powerhouse.Service.EmailSenderService;
 
@@ -22,31 +34,46 @@ public class EmailSenderServiceImpl implements EmailSenderService {
 	@Autowired
 	private JavaMailSender javaMailSender;
 	@Autowired
-	private final EmailRepository emailRepository;
+	private final SendEmailRepository emailRepository;
 	@Autowired
 	private MaildetailsRepository maildetailsRepository;
 
 	@Autowired
-	public EmailSenderServiceImpl(EmailRepository emailRepository) {
+	public EmailSenderServiceImpl(SendEmailRepository emailRepository) {
 		this.emailRepository = emailRepository;
 	}
 
 	@Value("${spring.mail.username}")
 	private String sender;
+
+	@Value("${spring.mail.password}")
+	private String password;
+
 	List<String> sendingMails = new LinkedList<>();
 
 	@Override
 
 	public String sendSimpleMail() {
+		sendingMails.clear();
 		List<String> emails = emailRepository.getEmails();
-		SimpleMailMessage mailMessage = new SimpleMailMessage();
 
-		// List<String> emailSubjects = emailRepository.getMailSubect();
-//		 List<String> emailBody = emailRepository.getMailBody();
 		// List<Integer> emailsCount = emailRepository.getMailsCount();
 
 		List<String> diffrentDomains = new LinkedList<>();
 		Map<String, LinkedList<String>> searchMap = new HashMap<>();
+
+		Properties properties = new Properties();
+		properties.put("mail.smtp.auth", "true");
+		properties.put("mail.smtp.starttls.enable", "true");
+		properties.put("mail.smtp.host", "smtp.gmail.com");
+		properties.put("mail.smtp.port", "587");
+
+		Session session = Session.getInstance(properties, new javax.mail.Authenticator() {
+			protected PasswordAuthentication getPasswordAuthentication() {
+				return new PasswordAuthentication(sender, password);
+
+			}
+		});
 
 		// to divide domains
 		for (int j = 0; j < emails.size(); j++) {
@@ -71,10 +98,6 @@ public class EmailSenderServiceImpl implements EmailSenderService {
 			}
 		}
 
-//		for (String iKey : searchMap.keySet()) {
-//			System.out.println(iKey + ": " + searchMap.get(iKey).toString());
-//		}
-		// MimeMessage mailMessage = new MimeMessage();
 		for (int b = 0; b < diffrentDomains.size(); b++) {
 			LinkedList<String> finalMail = searchMap.get(diffrentDomains.get(b));
 			String mailSubject = null;
@@ -82,40 +105,61 @@ public class EmailSenderServiceImpl implements EmailSenderService {
 			int count = 0; // count for checking how many mails sending for domain
 			for (int c = 0; c < finalMail.size(); c++) {
 
-				mailMessage.setFrom(sender);
-				mailMessage.setTo(finalMail.get(c));
-				try {
-					mailBody = emailRepository.getMailBody(finalMail.get(c).toString());
-					mailMessage.setText(mailBody);
-				} catch (Exception e1) {
+				// Start our mail message
+				MimeMessage msg = new MimeMessage(session);
 
-					e1.printStackTrace();
-				}
 				try {
-					mailSubject = emailRepository.getMailSubject(finalMail.get(c).toString());
-					mailMessage.setSubject(mailSubject);
-				} catch (Exception e1) {
-					return "error in mail ";
-				}
-				try {
-					 javaMailSender.send(mailMessage);
-					System.out.println("sent to : " + finalMail.get(c));
-					// System.out.println("mail subject : " + mailSubject);
-					// System.out.println("mail body : " + mailBody);
-					sendingMails.add(finalMail.get(c));
-					emailRepository.updateMailCount(finalMail.get(c));
-					emailRepository.updateSendMailDate(finalMail.get(c));
-					count = count + 1;
+					int checkSendMailCount = emailRepository.checkMailCount(finalMail.get(c));
+
+					if (!(checkSendMailCount > 0)) {
+						msg.setFrom(new InternetAddress(sender));
+						msg.addRecipient(Message.RecipientType.TO, new InternetAddress(finalMail.get(c)));
+						mailSubject = emailRepository.getMailSubject(finalMail.get(c).toString());
+						msg.setSubject(mailSubject);
+
+						Multipart emailContent = new MimeMultipart();
+
+						// Text body part
+						MimeBodyPart textBodyPart = new MimeBodyPart();
+						mailBody = emailRepository.getMailBody(finalMail.get(c).toString());
+						textBodyPart.setText(mailBody);
+
+						// Attachment body part.
+						MimeBodyPart pdfAttachment = new MimeBodyPart();
+						pdfAttachment.attachFile("C:\\Users\\Admin\\Downloads\\cskvsrcb.jpg");
+
+						// Attach body parts
+						emailContent.addBodyPart(textBodyPart);
+						emailContent.addBodyPart(pdfAttachment);
+
+						// Attach multipart to message
+						msg.setContent(emailContent);
+
+						Transport.send(msg);
+						System.out.println("Sent message" + finalMail.get(c));
+						sendingMails.add(finalMail.get(c));
+						// update mail count
+						emailRepository.updateMailCount(finalMail.get(c));
+						// update send mail date
+						emailRepository.updateSendMailDate(finalMail.get(c));
+						count = count + 1;
+					}
+				} catch (MessagingException e) {
+					e.printStackTrace();
+				} catch (IOException e) {
+
+					e.printStackTrace();
 				} catch (Exception e) {
-					return "Error while Sending Mail";
+					e.printStackTrace();
 				}
 				if (count == 5) {
 					break;
 				}
+
 			}
 		}
 
-		return "send to: " +"\" " + sendingMails.toString()+" \"";
+		return "send to: " + sendingMails.toString();
 
 	}
 
@@ -127,4 +171,5 @@ public class EmailSenderServiceImpl implements EmailSenderService {
 		return detailsList;
 
 	}
+
 }

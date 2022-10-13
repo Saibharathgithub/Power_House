@@ -9,7 +9,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class EmailRepository {
+public class SendEmailRepository {
 	@Autowired
 	JdbcTemplate jdbcTemplate;
 
@@ -117,27 +117,27 @@ public class EmailRepository {
 
 	}
 
-//	// select mail count in database
-//	private static final String SQL_SELECT_SENT_MAIL_COUNT_IN_DB = "select send_mails_count from  powerhouse WHERE email_id = :emailId";
-//
-//	public int checkMailCount(String email) throws Exception {
-//		int count = 0;
-//		try {
-//			NamedParameterJdbcTemplate template = new NamedParameterJdbcTemplate(jdbcTemplate.getDataSource());
-//
-//			MapSqlParameterSource params = new MapSqlParameterSource();
-//			params.addValue("emailId", email);
-//
-//		 count =	template.queryForObject(SQL_SELECT_SENT_MAIL_COUNT_IN_DB, params, Integer.class);
-//
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//
-//		} finally {
-//			jdbcTemplate.getDataSource().getConnection().close();
-//		}
-//		return count;
-//
-//	} 
+	// select mail count in database
+	private static final String SQL_SELECT_SENT_MAIL_COUNT_IN_DB = "select send_mails_count from  powerhouse WHERE email_id = :emailId";
+
+	public int checkMailCount(String email) throws Exception {
+		int count = 0;
+		try {
+			NamedParameterJdbcTemplate template = new NamedParameterJdbcTemplate(jdbcTemplate.getDataSource());
+
+			MapSqlParameterSource params = new MapSqlParameterSource();
+			params.addValue("emailId", email);
+
+		 count =	template.queryForObject(SQL_SELECT_SENT_MAIL_COUNT_IN_DB, params, Integer.class);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+
+		} finally {
+			jdbcTemplate.getDataSource().getConnection().close();
+		}
+		return count;
+
+	} 
 
 }

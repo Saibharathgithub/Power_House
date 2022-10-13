@@ -21,12 +21,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.kanerika.powerhouse.Repository.ReadEmailRepository;
-import com.kanerika.powerhouse.Service.ReadEmailService;
-
-
+import com.kanerika.powerhouse.Service.ReadEmailInboxService;
 
 @Service
-public class ReadGmilInboxServiceimpl implements ReadEmailService {
+public class ReadGmilInboxServiceimpl implements ReadEmailInboxService {
 
 	@Autowired
 	private ReadEmailRepository emailRepository;
@@ -108,7 +106,7 @@ public class ReadGmilInboxServiceimpl implements ReadEmailService {
 				}
 
 				String messageBody = messageContent.replaceAll("\\<.*?\\>", " "); // i am interested On Thus 2022/10/06
-				//System.out.println(messageBody);
+				// System.out.println(messageBody);
 				Pattern p = Pattern.compile("On [A-Za-z]+{3}, \\d{2} Oct, \\d{4}, \\d{1,3}:\\d{2}");
 
 				String[] replySplit = p.split(messageBody); // i am interested, On Thus 2022/10/06 ....

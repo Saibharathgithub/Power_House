@@ -10,5 +10,4 @@ public class PowerHouseApplication {
 		SpringApplication.run(PowerHouseApplication.class, args);
 
 	}
-
 }
