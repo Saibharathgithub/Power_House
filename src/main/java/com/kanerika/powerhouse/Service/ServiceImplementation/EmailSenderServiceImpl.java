@@ -18,6 +18,7 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -158,8 +159,9 @@ public class EmailSenderServiceImpl implements EmailSenderService {
 
 			}
 		}
+		JSONObject jsonObject = new JSONObject(sendingMails);
 
-		return "send to: " + sendingMails.toString();
+		return "send to: " + jsonObject;
 
 	}
 
